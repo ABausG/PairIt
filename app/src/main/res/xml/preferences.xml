@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue="5"
+        android:digits="23456789"
+        android:hint="@string/colorRange"
+        android:key="colors"
+        android:lines="1"
+        android:title="@string/colorAmount"
+        android:inputType="numberDecimal"/>
+
+    <EditTextPreference
+        android:defaultValue="3"
+        android:numeric="decimal"
+        android:digits="123456789"
+        android:hint="@string/rowRange"
+        android:key="rows"
+        android:lines="1"
+        android:title="@string/rowAmount"
+        android:inputType="numberDecimal" />
+</PreferenceScreen>
