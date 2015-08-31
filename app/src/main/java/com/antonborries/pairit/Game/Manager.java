@@ -1,5 +1,7 @@
 package com.antonborries.pairit.Game;
 
+import com.antonborries.pairit.RecyclerAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,18 +22,27 @@ public class Manager {
         this(type, 27);
     }
 
+    //TODO: IMPLEMENT SETTINGS WITH LENGTH
+
     public Manager(String type, int length) {
         numbers = new ArrayList<>();
         history = new ArrayList<>();
         switch (type) {
             case "random":
-                Random rnd = new Random();
-                for (int i = 0; i < length; i++) {
-                    int nmb = rnd.nextInt(5) + 1;
-                    numbers.add(nmb);
-                }
+                fillWithNumbers(length, 5);
+                break;
+            default:
+                fillWithNumbers(length, 5);
                 break;
 
+        }
+    }
+
+    private void fillWithNumbers(int amount, int diversity){
+        Random rand = new Random();
+        for (int i = 0; i < amount; i++) {
+            int nmb = rand.nextInt(diversity);
+            getNumbers().add(nmb);
         }
     }
 
@@ -39,10 +50,12 @@ public class Manager {
      * Adds the Numbers to the List
      */
     public void addNumbers() {
-        int end = numbers.size();
-        for (int i = 0; i < end; i++) {
-            numbers.add(numbers.get(i));
-        }
+        int end = getNumbers().size();
+        fillWithNumbers(end, 5);
+
+        //Add BreakPoint and Identifier to History
+        history.add(end);
+        history.add(-1);
     }
 
     /**
@@ -54,31 +67,31 @@ public class Manager {
     public int[] checkPartners(int index) {
         partners = new int[4];
 
-        int value = numbers.get(index);
+        int value = getNumbers().get(index);
 
         //TOP Partner
-        if (index - 9 >= 0 && numbers.get(index - 9) == value)
+        if (index - 9 >= 0 && getNumbers().get(index - 9) == value)
             partners[0] = index - 9;
         else
             partners[0] = -1;
 
         //RIGHT Partner
-        if (index + 1 < numbers.size() && numbers.get(index + 1) == value)
-            partners[0] = index + 1;
+        if (index + 1 < getNumbers().size() && getNumbers().get(index + 1) == value)
+            partners[01] = index + 1;
         else
-            partners[0] = -1;
+            partners[1] = -1;
 
         //BOTTOM Partner
-        if (index + 9 < numbers.size() && numbers.get(index + 9) == value)
-            partners[0] = index + 9;
+        if (index + 9 < getNumbers().size() && getNumbers().get(index + 9) == value)
+            partners[2] = index + 9;
         else
-            partners[0] = -1;
+            partners[2] = -1;
 
         //LEFT Partner
-        if (index - 1 >= 0 && numbers.get(index - 1) == value)
-            partners[0] = index - 1;
+        if (index - 1 >= 0 && getNumbers().get(index - 1) == value)
+            partners[3] = index - 1;
         else
-            partners[0] = -1;
+            partners[3] = -1;
 
 
         return partners;
@@ -87,7 +100,7 @@ public class Manager {
     public void deletePair(int pos1, int pos2) {
 
         //Switch so pos1 < pos2
-        if(pos1 > pos2){
+        if (pos1 > pos2) {
             int parkingSpot = pos2;
             pos2 = pos1;
             pos1 = parkingSpot;
@@ -95,19 +108,41 @@ public class Manager {
 
 
         //Adds Position and Value to History List
-        history.add(numbers.get(pos2));
+        history.add(getNumbers().get(pos2));
         history.add(pos2);
-        history.add(numbers.get(pos1));
+        history.add(getNumbers().get(pos1));
         history.add(pos1);
 
         //Remove Values
-        numbers.remove(pos1);
-        numbers.remove(pos2);
+        getNumbers().remove(pos2);
+        getNumbers().remove(pos1);
     }
 
-    public void revert(){
-        numbers.add(history.remove(history.size()-1),history.remove(history.size()-1));
-        numbers.add(history.remove(history.size()-1),history.remove(history.size()-1));
+    public void undo(RecyclerAdapter recAd) {
+        if (history.size() >= 2) {
+            if (history.size() >= 4 && history.get(history.size() - 1) != -1) {
+                int loc1 = history.remove(history.size() - 1);
+                int val1 = history.remove(history.size() - 1);
+                int loc2 = history.remove(history.size() - 1);
+                int val2 = history.remove(history.size() - 1);
+                getNumbers().add(loc1, val1);
+                getNumbers().add(loc2, val2);
+
+                recAd.addUndo(loc1, loc2);
+            } else {
+                //Remove -1
+                history.remove(history.size() - 1);
+                //Get Start Location
+                int start = history.remove(history.size() - 1);
+                for (int i = numbers.size() - 1; i >= start; i--) {
+                    numbers.remove(i);
+                }
+                recAd.undoAdd(start);
+            }
+        }
     }
 
+    public List<Integer> getNumbers() {
+        return numbers;
+    }
 }

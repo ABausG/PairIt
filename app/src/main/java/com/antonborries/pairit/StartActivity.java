@@ -1,9 +1,11 @@
 package com.antonborries.pairit;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -33,5 +35,16 @@ public class StartActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void startRandomGame(View view) {
+        Intent startGameIntent = new Intent(this, GameActivity.class);
+        startGameIntent.putExtra("TYPE", "random");
+        this.startActivityForResult(startGameIntent, 1);
+    }
+
+    public void settings(View view) {
+        Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        this.startActivityForResult(settingsIntent, 2);
     }
 }

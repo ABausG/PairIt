@@ -1,10 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    tools:context=".StartActivity"
-    android:backgroundTint="@color/one">
-
-    <TextView android:text="@string/hello_world" android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-
-</RelativeLayout>
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment"
+    android:name="com.antonborries.pairit.StartFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout="@layout/fragment_start" />

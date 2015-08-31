@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".StartActivity"
+    android:id="@+id/fragment">
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fabRandom"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        app:backgroundTint="@color/two"
+        android:clickable="true"
+        android:onClick="startRandomGame"
+        android:src="@drawable/ic_play_arrow_white_48dp"
+        android:cropToPadding="false"
+        android:scaleType="center" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fabSettings"
+        app:backgroundTint="@color/three"
+        android:clickable="true"
+        android:onClick="settings"
+        android:src="@drawable/ic_settings_white_48dp"
+        android:cropToPadding="false"
+        android:scaleType="center"
+        android:layout_below="@+id/fabRandom"
+        android:layout_toRightOf="@+id/fabRandom"
+        android:layout_toEndOf="@+id/fabRandom"
+        android:layout_marginTop="67dp" />
+</RelativeLayout>

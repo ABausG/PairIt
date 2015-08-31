@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="one">#FF9800</color>
+    <color name="zero">#FF9800</color>
+    <color name="one">#607D8B</color>
     <color name="two">#2196F3</color>
     <color name="three">#E91E63</color>
     <color name="four">#009688</color>
-    <color name="five">#607D8B</color>
 
 
     <color name="primary">#FF9800</color>
