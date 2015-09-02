@@ -16,9 +16,9 @@ public class Statistics {
         this.colors = colors;
     }
 
-    public long getScore(){
+    public double getScore(){
         //TODO: CALCULATE SCORE
-        long score = ((long)numbers*(long)colors)/(time*(long)deletedPairs+(long)undos+(long)adds);
+        double score = ((double)(numbers*colors)/((double)((time)/10000)+deletedPairs+undos+adds))*1000;
         return score;
     }
 

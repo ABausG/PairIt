@@ -133,7 +133,7 @@ public class Manager {
         getNumbers().remove(pos1);
 
         if(numbers.size() == 0){
-            Log.v("WINMSG", Long.toString(stats.getScore()));
+            Log.v("WINMSG", Double.toString(stats.getScore()));
         }
     }
 
@@ -157,6 +157,7 @@ public class Manager {
                 //Get Start Location
                 int start = history.remove(history.size() - 1);
                 for (int i = numbers.size() - 1; i >= start; i--) {
+                    checkColors[numbers.get(i)]--;
                     numbers.remove(i);
                 }
                 recAd.undoAdd(start);
@@ -169,4 +170,7 @@ public class Manager {
     }
 
 
+    public void addTime(long time) {
+        stats.addTime(time);
+    }
 }

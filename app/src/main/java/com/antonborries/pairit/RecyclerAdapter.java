@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -28,14 +29,36 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
     private int rows;
     private int difficulty;
 
+    private Handler timer;
+    private boolean isRunning;
+    private long lastTime;
+
+    private Runnable runnable;
+
 
     public RecyclerAdapter() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(GameActivity.getContext());
 
-        rows = Integer.parseInt(sp.getString("rows", ""));
-        difficulty = Integer.parseInt(sp.getString("colors",""));
+        timer = new Handler();
+        isRunning = false;
 
-        this.manager = new Manager(rows , difficulty);
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (isRunning) {
+                    long newTime = System.currentTimeMillis();
+                    manager.addTime(newTime - lastTime);
+                    lastTime = newTime;
+                    timer.post(this);
+
+                }
+            }
+        };
+
+        rows = Integer.parseInt(sp.getString("rows", ""));
+        difficulty = Integer.parseInt(sp.getString("colors", ""));
+
+        this.manager = new Manager(rows, difficulty);
     }
 
     @Override
@@ -47,6 +70,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
         RecyclerHolder holder = new RecyclerHolder(itemView, new RecyclerHolder.TileClick() {
             @Override
             public void onTileClick(int position) {
+                if(!isRunning){
+                    isRunning = true;
+                    lastTime = System.currentTimeMillis();
+                    timer.post(runnable);
+                }
 
                 if (position == selectedTile) {
                     //Clicked Tile is Selected
@@ -55,8 +83,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
                 } else if (partners != null && selectedTile != -1 && (partners[0] == position || partners[1] == position || partners[2] == position || partners[3] == position)) {
                     //Clicked Tile is Partner
                     manager.deletePair(position, selectedTile);
-                    notifyItemRemoved(Math.max(position,selectedTile));
-                    notifyItemRemoved(Math.min(position,selectedTile));
+                    notifyItemRemoved(Math.max(position, selectedTile));
+                    notifyItemRemoved(Math.min(position, selectedTile));
                     selectedTile = -1;
                     partners = null;
                 } else {//Clicked Tile is empty
@@ -75,7 +103,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
             Resources res = GameActivity.getContext().getResources();
 
             int value = manager.getNumbers().get(position);
-            switch (value){
+            switch (value) {
                 case 0:
                     ((RecyclerHolder) holder).getFab().setBackgroundTintList(ColorStateList.valueOf(res.getColor(R.color.zero)));
                     break;
@@ -117,7 +145,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
 
     }
 
-    // public void onViewAttachedToWindow(ViewHolder holder) { }
 
     public Manager getManager() {
         return manager;
