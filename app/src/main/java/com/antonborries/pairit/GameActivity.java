@@ -44,6 +44,8 @@ public class GameActivity extends AppCompatActivity {
             ft.add(R.id.container, gameFragment).commit();
         }
 
+
+
         //CIRCULAR REVEAL
         final View rV = getWindow().getDecorView().findViewById(android.R.id.content);
         rV.setVisibility(View.INVISIBLE);

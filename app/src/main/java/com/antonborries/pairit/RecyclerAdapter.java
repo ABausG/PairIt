@@ -1,9 +1,12 @@
 package com.antonborries.pairit;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,15 +25,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
     private int selectedTile;
     private int[] partners;
 
+    private int rows;
+    private int difficulty;
 
-    public RecyclerAdapter(String gameType) {
-        this.gameType = gameType;
-        this.manager = new Manager(gameType);
-    }
 
-    public RecyclerAdapter(Parcel source) {
-        gameType = source.readString();
-        this.manager = new Manager("random");
+    public RecyclerAdapter() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(GameActivity.getContext());
+
+        rows = Integer.parseInt(sp.getString("rows", ""));
+        difficulty = Integer.parseInt(sp.getString("colors",""));
+
+        this.manager = new Manager(rows , difficulty);
     }
 
     @Override
@@ -86,6 +91,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
                 case 4:
                     ((RecyclerHolder) holder).getFab().setBackgroundTintList(ColorStateList.valueOf(res.getColor(R.color.four)));
                     break;
+                case 5:
+                    ((RecyclerHolder) holder).getFab().setBackgroundTintList(ColorStateList.valueOf(res.getColor(R.color.five)));
+                    break;
+                case 6:
+                    ((RecyclerHolder) holder).getFab().setBackgroundTintList(ColorStateList.valueOf(res.getColor(R.color.six)));
+                    break;
+                case 7:
+                    ((RecyclerHolder) holder).getFab().setBackgroundTintList(ColorStateList.valueOf(res.getColor(R.color.seven)));
+                    break;
+                case 8:
+                    ((RecyclerHolder) holder).getFab().setBackgroundTintList(ColorStateList.valueOf(res.getColor(R.color.eight)));
+                    break;
+                case 9:
+                    ((RecyclerHolder) holder).getFab().setBackgroundTintList(ColorStateList.valueOf(res.getColor(R.color.nine)));
+                    break;
+                case 10:
+                    ((RecyclerHolder) holder).getFab().setBackgroundTintList(ColorStateList.valueOf(res.getColor(R.color.ten)));
+                    break;
+
             }
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
@@ -126,7 +150,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
 
                 @Override
                 public RecyclerAdapter createFromParcel(Parcel source) {
-                    return new RecyclerAdapter(source);
+                    return new RecyclerAdapter();
                 }
 
                 @Override

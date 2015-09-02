@@ -24,6 +24,8 @@ public class GameFragment extends Fragment {
     private RecyclerView recView;
     private View rootView;
 
+
+
     public GameFragment() {
         // Required empty public constructor
     }
@@ -45,12 +47,13 @@ public class GameFragment extends Fragment {
         recView.setItemAnimator(new DefaultItemAnimator());
 
 
-        recView.setAdapter(new RecyclerAdapter("random"));
+        recView.setAdapter(new RecyclerAdapter());
 
 
 
         return rootView;
     }
+
 
 
     public View getRootView() {

@@ -7,7 +7,7 @@
         android:key="colors"
         android:lines="1"
         android:title="@string/colorAmount"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal" />
 
     <EditTextPreference
         android:defaultValue="3"

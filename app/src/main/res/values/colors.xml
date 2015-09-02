@@ -6,15 +6,12 @@
     <color name="two">#2196F3</color>
     <color name="three">#E91E63</color>
     <color name="four">#009688</color>
-    <color name="five">#F44336</color>
-    <color name="six">#FFEB3B</color>
-    <color name="seven">#9C27B0</color>
-    <color name="eight">#795548</color>
-    <color name="nine">#673AB7</color>
-    <color name="ten">#CDDC39</color>
-    <color name="eleven">#3F51B5</color>
-    <color name="twelve">#4CAF50</color>
-    <color name="fourteen">#9E9E9E</color>
+    <color name="five">#9E9E9E</color>
+    <color name="six">#9C27B0</color>
+    <color name="seven">#795548</color>
+    <color name="eight">#673AB7</color>
+    <color name="nine">#4CAF50</color>
+    <color name="ten">#F44336</color>
 
 
     <color name="primary">#FF9800</color>

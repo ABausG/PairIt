@@ -1,5 +1,8 @@
 package com.antonborries.pairit.Game;
 
+import android.content.SharedPreferences;
+import android.util.Log;
+
 import com.antonborries.pairit.RecyclerAdapter;
 
 import java.util.ArrayList;
@@ -17,41 +20,51 @@ public class Manager {
 
     private int[] partners;
 
+    private Statistics stats;
 
-    public Manager(String type) {
-        this(type, 27);
-    }
+    private int rows;
+    private int difficulty;
 
-    //TODO: IMPLEMENT SETTINGS WITH LENGTH
+    private int[] checkColors;
 
-    public Manager(String type, int length) {
+
+    public Manager(int rows, int difficulty) {
+        this.rows = rows;
+        this.difficulty = difficulty;
+        checkColors = new int[difficulty];
         numbers = new ArrayList<>();
         history = new ArrayList<>();
-        switch (type) {
-            case "random":
-                fillWithNumbers(length, 5);
-                break;
-            default:
-                fillWithNumbers(length, 5);
-                break;
+        fillWithNumbers(rows * 9, true);
+        stats = new Statistics(rows*9, difficulty);
+    }
 
+    private void fillWithNumbers(int amount, boolean firstInit) {
+        Random rand = new Random();
+        boolean foundNumber = false;
+        for (int i = 0; i < amount; i++) {
+            do {
+                int nmb = rand.nextInt(difficulty);
+                if (checkColors[nmb] > 0 || firstInit) {
+                    getNumbers().add(nmb);
+                    checkColors[nmb]++;
+                    foundNumber = true;
+                }
+            } while (!foundNumber);
+            foundNumber = false;
         }
     }
 
-    private void fillWithNumbers(int amount, int diversity){
-        Random rand = new Random();
-        for (int i = 0; i < amount; i++) {
-            int nmb = rand.nextInt(diversity);
-            getNumbers().add(nmb);
-        }
+    private void fillWithNumbers(int amount){
+        fillWithNumbers(amount, false);
     }
 
     /**
      * Adds the Numbers to the List
      */
     public void addNumbers() {
+        stats.addAdds(  );
         int end = getNumbers().size();
-        fillWithNumbers(end, 5);
+        fillWithNumbers(end);
 
         //Add BreakPoint and Identifier to History
         history.add(end);
@@ -98,6 +111,8 @@ public class Manager {
     }
 
     public void deletePair(int pos1, int pos2) {
+        stats.addDeletedPairs();
+        checkColors[numbers.get(pos1)] -= 2;
 
         //Switch so pos1 < pos2
         if (pos1 > pos2) {
@@ -116,10 +131,15 @@ public class Manager {
         //Remove Values
         getNumbers().remove(pos2);
         getNumbers().remove(pos1);
+
+        if(numbers.size() == 0){
+            Log.v("WINMSG", Long.toString(stats.getScore()));
+        }
     }
 
     public void undo(RecyclerAdapter recAd) {
         if (history.size() >= 2) {
+            stats.addUndos();
             if (history.size() >= 4 && history.get(history.size() - 1) != -1) {
                 int loc1 = history.remove(history.size() - 1);
                 int val1 = history.remove(history.size() - 1);
@@ -127,6 +147,8 @@ public class Manager {
                 int val2 = history.remove(history.size() - 1);
                 getNumbers().add(loc1, val1);
                 getNumbers().add(loc2, val2);
+
+                checkColors[val1] += 2;
 
                 recAd.addUndo(loc1, loc2);
             } else {
@@ -145,4 +167,6 @@ public class Manager {
     public List<Integer> getNumbers() {
         return numbers;
     }
+
+
 }
