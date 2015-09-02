@@ -11,15 +11,17 @@ public class Statistics {
     private int undos;
     private int adds;
 
-    public Statistics(int numbers, int colors){
+    public Statistics(int numbers, int colors) {
         this.numbers = numbers;
         this.colors = colors;
     }
 
-    public double getScore(){
+    public double getScore() {
         //TODO: CALCULATE SCORE
-        double score = ((double)(numbers*colors)/((double)((time)/10000)+deletedPairs+undos+adds))*1000;
-        return score;
+        if (time  + undos + adds != 0) {
+            double score = ((double) (numbers * colors+deletedPairs) / ((double) ((time) / 10000)  + undos + adds)) * 1000;
+            return score;
+        } else return 0;
     }
 
 

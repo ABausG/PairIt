@@ -1,9 +1,11 @@
 package com.antonborries.pairit;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,9 +14,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.antonborries.pairit.Game.Manager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,13 +38,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
     private long lastTime;
 
     private Runnable runnable;
+    private View playPauseView;
+    private TextView scoreView;
 
 
-    public RecyclerAdapter() {
+    public RecyclerAdapter(View view) {
+        scoreView = (TextView) view;
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(GameActivity.getContext());
 
         timer = new Handler();
         isRunning = false;
+        scoreView.setText("0");
 
         runnable = new Runnable() {
             @Override
@@ -50,7 +58,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
                     manager.addTime(newTime - lastTime);
                     lastTime = newTime;
                     timer.post(this);
-
+                    scoreView.setText(Long.toString((long) manager.getStats().getScore()));
                 }
             }
         };
@@ -68,12 +76,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
                 from(parent.getContext()).
                 inflate(R.layout.tile, parent, false);
         RecyclerHolder holder = new RecyclerHolder(itemView, new RecyclerHolder.TileClick() {
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onTileClick(int position) {
-                if(!isRunning){
+                if (!isRunning) {
                     isRunning = true;
                     lastTime = System.currentTimeMillis();
                     timer.post(runnable);
+                    if (playPauseView != null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            playPauseView.setBackground(GameActivity.getContext().getResources().getDrawable(R.drawable.ic_pause_white_48dp, GameActivity.getContext().getTheme()));
+                        } else {
+                            playPauseView.setBackground(GameActivity.getContext().getResources().getDrawable(R.drawable.ic_pause_white_48dp));
+                        }
+                    }
                 }
 
                 if (position == selectedTile) {
@@ -170,6 +186,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeList(getNumbers());
+        dest.writeSerializable((Serializable) scoreView);
     }
 
     public static final Parcelable.Creator<RecyclerAdapter> CREATOR =
@@ -177,7 +194,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
 
                 @Override
                 public RecyclerAdapter createFromParcel(Parcel source) {
-                    return new RecyclerAdapter();
+
+                    return new RecyclerAdapter((View) source.readSerializable());
                 }
 
                 @Override
@@ -203,6 +221,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter implements Parcelable 
 
     public void undoAdd(int start) {
         notifyItemRangeRemoved(start, start);
+    }
+
+    public void pause(View view) {
+        playPauseView = view;
+        isRunning = false;
+        timer.removeCallbacks(runnable);
     }
 }
 

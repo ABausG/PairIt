@@ -173,4 +173,8 @@ public class Manager {
     public void addTime(long time) {
         stats.addTime(time);
     }
+
+    public Statistics getStats() {
+        return stats;
+    }
 }

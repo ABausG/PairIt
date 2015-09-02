@@ -47,7 +47,7 @@ public class GameFragment extends Fragment {
         recView.setItemAnimator(new DefaultItemAnimator());
 
 
-        recView.setAdapter(new RecyclerAdapter());
+        recView.setAdapter(new RecyclerAdapter(rootView.findViewById(R.id.scoreField)));
 
 
 
@@ -66,5 +66,9 @@ public class GameFragment extends Fragment {
 
     public void undo() {
         ((RecyclerAdapter)recView.getAdapter()).undo();
+    }
+
+    public void pause(View view) {
+        ((RecyclerAdapter)recView.getAdapter()).pause(view);
     }
 }

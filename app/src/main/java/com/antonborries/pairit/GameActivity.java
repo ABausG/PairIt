@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 
 import com.antonborries.pairit.Game.Manager;
 
@@ -102,6 +103,12 @@ public class GameActivity extends AppCompatActivity {
 
     public void undo(View view){
         gameFragment.undo();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void pause(View view){
+        view.setBackground(getDrawable(R.drawable.ic_play_arrow_white_48dp));
+        gameFragment.pause(view);
     }
 
 
